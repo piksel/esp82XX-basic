@@ -1,8 +1,10 @@
 //Copyright (C) 2015 <>< Charles Lohr, see LICENSE file for more info.
 //
 //This particular file may be licensed under the MIT/x11, New BSD or ColorChord Licenses.
-
-var output;
+var $outputMsg;
+var $outputInfo;
+var outputMsg;
+var outputInfo;
 var websocket;
 var commsup = 0;
 
@@ -48,7 +50,7 @@ function QueueOperation( command, callback )
 }
 
 function addSection(name, content, id, activateEvent) {
-	$('#MainMenu').append('<h3 id="'+id+'Clicker"><span>'+name+'</span></h3><div id="'+id+'">'+content+'</div>');
+	$('#MainMenu').append('<h3 id="'+id+'Clicker"><span>'+name+'</span></h3><div class="content" id="'+id+'">'+content+'</div>');
 	sectionOpen[id] = localStorage["sh" + id] > 0.5;
 	if(typeof activateEvent != 'undefined') {
 		sectionActivateEvents[id] = activateEvent;
@@ -57,8 +59,11 @@ function addSection(name, content, id, activateEvent) {
 
 function init()
 {
+  $output = $('#output');
 
+  init_sections();
 
+  // TODO: Add the local storage stuff -NM 2016-09-24
 	$( ".collapsible" ).each(function( index ) {
 		if( localStorage["sh" + this.id] > 0.5 )
 		{
@@ -69,26 +74,22 @@ function init()
 
 	$("#custom_command_response").val( "" );
 
-
-    $( "#MainMenu" ).accordion({
-      collapsible: true,
-			animate: false,
-			active: false,
-			heightStyle: 'content',
-			activate: function(event, ui) {
-				if(typeof ui.oldPanel != 'undefined' && ui.oldPanel.length > 0) {
-					var oldId = ui.oldPanel[0].id;
-					sectionOpen[oldId] = false;
-				}
-				if(typeof ui.newPanel != 'undefined' && ui.newPanel.length > 0) {
-					var newId = ui.newPanel[0].id;
-					sectionOpen[newId] = true;
-					if(typeof sectionActivateEvents[newId] != 'undefined')
-						sectionActivateEvents[newId]();
-				}
+	$( "#MainMenu > h3" ).click(function() {
+		  $header = $(this);
+		  $content = $header.next('.content');
+			$header.toggleClass('open');
+			$content.toggle();
+			var contentId = $content[0].id;
+			if($content.css('display') == 'block') {
+				sectionOpen[contentId] = true;
+				if(typeof sectionActivateEvents[contentId] != 'undefined')
+					sectionActivateEvents[contentId]();
 			}
-    });
-
+			else {
+				sectionOpen[contentId] = false;
+			}
+			return false;
+	})
 
 	console.log( "Load complete.\n" );
 	Ticker();
@@ -99,7 +100,7 @@ window.addEventListener("load", init, false);
 
 function StartWebSocket()
 {
-	$output.text("Connecting...");
+	$outputMsg.text("Connecting...");
 	if( websocket ) websocket.close();
 	workarray = {};
 	workqueue = [];
@@ -180,8 +181,11 @@ function onMessage(evt)
 	{
 		if( evt.data.length > 2 )
 		{
-			var wxresp = evt.data.substr(2).split("\t");
-			output.innerHTML = "<div style='float:left'>Messages: " + msg + "</div><div style='float:right'>RSSI: " + wxresp[0] + " / IP: " + ((wxresp.length>1)?HexToIP( wxresp[1] ):"") + "</p>";
+			if(IsTabOpen('SystemStatus')) {
+				var wxresp = evt.data.substr(2).split("\t");
+				outputMsg.innerHTML = 'Messages: ' + msg ;
+				outputInfo.innerHTML = "RSSI: " + wxresp[0] + " / IP: " + ((wxresp.length>1)?HexToIP( wxresp[1] ):"");
+			}
 		}
 	}
 
@@ -233,15 +237,6 @@ function IssueCustomCommand()
 	QueueOperation( $("#custom_command").val(), function( req,data) { $("#custom_command_response").val( data ); } );
 }
 
-
-
-
-
-
-
-
-
-
 function MakeDragDrop( divname, callback )
 {
 	var obj = $("#" + divname);
@@ -275,30 +270,6 @@ function MakeDragDrop( divname, callback )
 		callback(files);
 	});
 }
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///Below here are mostly just events...
-
-/* -- System Settings --------------------------------------------------------*/
-
-
-/* -- WiFi -------------------------------------------------------------------*/
-
-
-
-
-/* -- GPIO -------------------------------------------------------------------*/
-
-
-
-
-/* -- Flashing ---------------------------------------------------------------*/
 
 
 /* Utility functions ---------------------------------------------------------- */

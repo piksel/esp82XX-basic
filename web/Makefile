@@ -18,10 +18,10 @@ js/sections.js :
 	python sections.py
 
 page/app.css.gz :
-	cat $(wildcard css/*) | gzip -9 > app.css.gz
+	cat $(wildcard css/*) | gzip -9 > page/app.css.gz
 
 page/app.js.gz : js/sections.js
-	cat $(wildcard js/*) | gzip -9 > app.js.gz
+	cat $(wildcard js/*) | gzip -9 > page/app.js.gz
 
 page.mpfs : mfsmaker $(wildcard page/*) Makefile page/app.css.gz page/app.js.gz
 	$(RM) -r tmp
@@ -40,4 +40,4 @@ usbpush : pushtodev page.mpfs
 	./pushtodev USB $(PAGE_OFFSET) page.mpfs
 
 clean :
-	$(RM) mfsmaker page.mpfs pushtodev execute_reflash tmp/* app.js.gz app.css.gz js/sections.js
+	$(RM) mfsmaker page.mpfs pushtodev execute_reflash tmp/* page/app.js.gz page/app.css.gz js/sections.js

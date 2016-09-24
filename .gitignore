@@ -1,5 +1,6 @@
 *.bin
 *.gz
+*.elf
 web/tmp
 web/execute_reflash
 web/mfsmaker
