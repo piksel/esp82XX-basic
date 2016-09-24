@@ -14,10 +14,10 @@ execute_reflash : execute_reflash.c md5.c
 mfsmaker pushtodev execute_reflash :
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS) -lusb-1.0
 
-js/sections.js :
-	python sections.py
+js/sections.js css/sections.css :
+	python sections.py merge
 
-page/app.css.gz :
+page/app.css.gz : css/sections.css
 	cat $(wildcard css/*) | gzip -9 > page/app.css.gz
 
 page/app.js.gz : js/sections.js
@@ -40,4 +40,4 @@ usbpush : pushtodev page.mpfs
 	./pushtodev USB $(PAGE_OFFSET) page.mpfs
 
 clean :
-	$(RM) mfsmaker page.mpfs pushtodev execute_reflash tmp/* page/app.js.gz page/app.css.gz js/sections.js
+	$(RM) mfsmaker page.mpfs pushtodev execute_reflash tmp/* page/app.js.gz page/app.css.gz js/sections.js css/sections.css
