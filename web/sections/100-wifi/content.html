@@ -1,0 +1,42 @@
+<fieldset>
+  <legend>Current Configuration:</legend>
+   (May deviate from default configuration, reset here if in doubt)
+  <form name="wifisection" action="javascript:ChangeWifiConfig();">
+    <table>
+      <tr>
+        <td valign="top">Type:</td>
+        <td>
+          <input type="radio" name="wifitype" id="wifitype1" value=1 onclick="ClickOpmode(1);"/>
+          <label for="wifitype1">Station (Connect to infrastructure)</label><br/>
+          <input type="radio" name="wifitype" id="wifitype2" value=2 onclick="ClickOpmode(2);"/>
+          <label for="wifitype2">AP (Broadcast a new AP)</label>
+        </td>
+      </tr>
+      <tr>
+        <td valign="middle">SSID:</td>
+        <td><input type="text" id="wificurname"></td>
+      </tr>
+      <tr>
+        <td valign="middle">PASS:</td>
+        <td><input type="text" id="wificurpassword"></td>
+      </tr>
+      <tr>
+        <td valign="middle">MAC:</td>
+        <td><input type="text" id="wifimac"> (Ignored in softAP mode)</td>
+      </tr>
+      <tr>
+        <td valign="middle">Chan:</td>
+        <td><input type="text" id="wificurchannel"> (Ignored in Station mode)</td>
+      </tr>
+      <tr>
+        <td valign="middle"></td>
+        <td><input type=submit value="Change Settings"> (Automatically saves to flash)</td>
+      </tr>
+    </table>
+  </form>
+</fieldset>
+<fieldset>
+  <legend>Scanned Stations:</legend>
+  <div id=WifiStations></div>
+  <input type=submit onclick="ScanForWifi();" value="Scan For Stations (Will disconnect!)">
+</fieldset>

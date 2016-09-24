@@ -1,0 +1,35 @@
+<fieldset style="width:100%">
+  <legend>Status:</legend>
+  <div id="output"></div>
+</fieldset>
+<fieldset style="float:left">
+  <legend>Settings:</legend>
+  <table style="width:150">
+    <tr>
+      <td>System Name:</td>
+      <td><input id="SystemName" maxlength=10></td>
+      <td><button onclick="QueueOperation("IN" + $("#SystemName").val() ); snchanged = false;">Change</button></td>
+    </tr>
+    <tr>
+      <td nowrap>System Description:</td><td><input id="SystemDescription" maxlength=16></td>
+      <td><button onclick="QueueOperation("ID" + $("#SystemDescription").val() ); sdchanged = false;">Change</button></td>
+    </tr>
+    <tr>
+      <td>Service Name:</td>
+      <td><div id="ServiceName"></div></td>
+    </tr>
+    <tr>
+      <td>Free Heap:</td>
+      <td><div id="FreeHeap"></div></td>
+    </tr>
+  </table>
+  <button onclick="SystemChangesReset();">Reset To Current</button>
+  <button onclick="SaveSystemSettings("save")">Save</button>
+  <button onclick="SaveSystemSettings("revert-saved")">Revert From Saved</button>
+  <button onclick="SaveSystemSettings("revert-factory")">Revert To Factory</button>
+  <button onclick="QueueOperation("IB");">Reboot</button>
+  </fieldset>
+  <fieldset style="">
+    <legend>Search for others:</legend>
+    <div id="peers"></div>
+  </fieldset>

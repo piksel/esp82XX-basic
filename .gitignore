@@ -1,0 +1,8 @@
+*.bin
+*.gz
+web/tmp
+web/execute_reflash
+web/mfsmaker
+web/page.mpfs
+web/pushtodev
+web/js/sections.js
