@@ -49,7 +49,7 @@ function QueueOperation( command, callback )
 
 function addSection(name, content, id, activateEvent) {
 	$('#MainMenu').append('<h3 id="'+id+'Clicker"><span>'+name+'</span></h3><div class="content" id="'+id+'">'+content+'</div>');
-	sectionOpen[id] = localStorage["sh" + id] > 0.5;
+	sectionOpen[id] = localStorage["sh" + id];
 	if(typeof activateEvent != 'undefined') {
 		sectionActivateEvents[id] = activateEvent;
 	}
@@ -57,36 +57,41 @@ function addSection(name, content, id, activateEvent) {
 
 function init()
 {
-  $output = $('#output');
 
   init_sections();
 
-  // TODO: Add the local storage stuff -NM 2016-09-24
-	$( ".collapsible" ).each(function( index ) {
-		if( localStorage["sh" + this.id] > 0.5 )
-		{
-			$( this ).show().toggleClass( 'opened' );
-//			console.log( "OPEN: " + this.id );
-		}
-	});
-
 	$("#custom_command_response").val( "" );
+
+  var updateContentOpen = function($content) {
+		var sectionId = $content[0].id;
+		if($content.hasClass('open')) {
+			sectionOpen[sectionId] = true;
+			if(typeof sectionActivateEvents[sectionId] != 'undefined')
+				sectionActivateEvents[sectionId]();
+		}
+		else {
+			sectionOpen[sectionId] = false;
+		}
+		localStorage["sh" + sectionId] = sectionOpen[sectionId];
+	}
 
 	$( "#MainMenu > h3" ).click(function() {
 		  $header = $(this);
 		  $content = $header.next('.content');
 			$header.toggleClass('open');
-			$content.toggle();
-			var contentId = $content[0].id;
-			if($content.css('display') == 'block') {
-				sectionOpen[contentId] = true;
-				if(typeof sectionActivateEvents[contentId] != 'undefined')
-					sectionActivateEvents[contentId]();
-			}
-			else {
-				sectionOpen[contentId] = false;
-			}
+			$content.toggleClass('open');
+			updateContentOpen($content);
 			return false;
+	})
+
+	$( "#MainMenu > .content" ).each(function(){
+		if( sectionOpen[this.id] )
+		{
+			$content = $( this );
+			$content.addClass('open');
+			$content.prev('h3').addClass('open')
+			updateContentOpen($content);
+		}
 	})
 
 	console.log( "Load complete.\n" );
