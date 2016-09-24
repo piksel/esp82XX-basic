@@ -1,8 +1,6 @@
 //Copyright (C) 2015 <>< Charles Lohr, see LICENSE file for more info.
 //
 //This particular file may be licensed under the MIT/x11, New BSD or ColorChord Licenses.
-var $outputMsg;
-var $outputInfo;
 var outputMsg;
 var outputInfo;
 var websocket;
@@ -100,7 +98,7 @@ window.addEventListener("load", init, false);
 
 function StartWebSocket()
 {
-	$outputMsg.text("Connecting...");
+	outputMsg.innerHTML = "Connecting...";
 	if( websocket ) websocket.close();
 	workarray = {};
 	workqueue = [];
